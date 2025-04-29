@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buat Subdomain</title>
+    <style>
+        body { max-width: 600px; margin: 20px auto; padding: 20px; }
+        input { width: 100%; padding: 10px; margin: 5px 0; }
+        button { background: #28a745; color: white; padding: 10px; border: none; width: 100%; }
+        .hasil { margin-top: 20px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🎯 Buat Subdomain</h1>
+    
+    <input type="text" id="subdomain" placeholder="nama-subdomain">
+    <input type="text" id="ip" placeholder="IP Address (contoh: 123.45.67.89)">
+    <input type="text" id="token" placeholder="Token">
+    
+    <button onclick="buatSubdomain()">Buat Sekarang</button>
+    
+    <div id="hasil" class="hasil"></div>
+
+    <script>
+        async function buatSubdomain() {
+            const subdomain = document.getElementById('subdomain').value;
+            const ip = document.getElementById('ip').value;
+            const token = document.getElementById('token').value;
+            
+            const hasil = document.getElementById('hasil');
+            hasil.innerHTML = "Sedang memproses...";
+            
+            try {
+                const response = await fetch('https://subdomain-worker.namadomain.workers.dev/create', {
+                    method: 'POST',
+                    body: JSON.stringify({ subdomain, ip, token })
+                });
+                
+                const data = await response.json();
+                hasil.innerHTML = data.success ? 
+                    `✅ Berhasil! ${subdomain}.namadomain.com → ${ip}` : 
+                    `❌ Gagal: ${data.error}`;
+                    
+            } catch (error) {
+                hasil.innerHTML = `🚨 Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
