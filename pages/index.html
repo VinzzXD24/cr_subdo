@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Subdomain Generator</title>
+  <style>
+    /* CSS styling sama seperti contoh sebelumnya */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔗 Buat Subdomain Baru</h1>
+    <input type="text" id="subdomain" placeholder="nama-subdomain">
+    <input type="text" id="ip" placeholder="123.45.67.89">
+    <input type="text" id="token" placeholder="XXXX-XXXX-XXXX">
+    <button onclick="createSubdomain()">Buat Sekarang</button>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    async function createSubdomain() {
+      const payload = {
+        subdomain: document.getElementById('subdomain').value,
+        ip: document.getElementById('ip').value,
+        token: document.getElementById('token').value
+      };
+
+      try {
+        const response = await fetch('/api/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        const messageEl = document.getElementById('message');
+        
+        if(response.ok) {
+          messageEl.innerHTML = `
+            <div class="success">
+              ✅ Berhasil dibuat!<br>
+              Subdomain: <strong>${payload.subdomain}.domainku.com</strong><br>
+              IP: <strong>${payload.ip}</strong>
+            </div>
+          `;
+        } else {
+          messageEl.innerHTML = `<div class="error">❌ Error: ${result.error}</div>`;
+        }
+      } catch(error) {
+        console.error('Error:', error);
+      }
+    }
+  </script>
+</body>
+</html>
